@@ -11,7 +11,15 @@ trait SecondDegreePolynomial:
 
 
 object SecondDegreePolynomial:
-  def apply(secondDegree: Double, firstDegree: Double, constant: Double): SecondDegreePolynomial = ??? // Fill here
+  def apply(secondDegree: Double, firstDegree: Double, constant: Double): SecondDegreePolynomial =
+    SecondDegreePolynomialImpl(constant, firstDegree, secondDegree)
+
+  private case class SecondDegreePolynomialImpl (override val constant: Double, override val firstDegree: Double, override val secondDegree: Double) extends SecondDegreePolynomial:
+    override def +(polynomial: SecondDegreePolynomial): SecondDegreePolynomial = SecondDegreePolynomial.apply(polynomial.secondDegree + secondDegree,
+      polynomial.firstDegree + firstDegree, polynomial.constant + constant)
+
+    override def -(polynomial: SecondDegreePolynomial): SecondDegreePolynomial = SecondDegreePolynomial.apply(polynomial.secondDegree - secondDegree,
+      polynomial.firstDegree - firstDegree, polynomial.constant - constant)
 
 @main def checkComplex(): Unit =
   val simplePolynomial = SecondDegreePolynomial(1.0, 0, 3)
@@ -21,6 +29,8 @@ object SecondDegreePolynomial:
   println((sum, sum.secondDegree, sum.firstDegree, sum.constant)) // 1.0 * X^2 + 1.0 * X + 3.0
   val multipleOperations = fullPolynomial - (anotherPolynomial + simplePolynomial)
   println((multipleOperations, multipleOperations.secondDegree, multipleOperations.firstDegree, multipleOperations.constant)) // 2.0 * X^2 + 1.0 * X + 2.0
+  println("toString " + simplePolynomial.toString)
+  println("Equals " + simplePolynomial.equals(SecondDegreePolynomial(1.0, 0, 3)))
 
 /** Hints:
   *   - implement SecondDegreePolynomial with a SecondDegreePolynomialImpl class, similar to PersonImpl in slides
