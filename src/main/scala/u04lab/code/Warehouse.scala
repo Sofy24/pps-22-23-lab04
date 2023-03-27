@@ -6,7 +6,8 @@ trait Item:
   def code: Int
   def name: String
   def tags: List[String]
-  def numberOfTags: String* //I'm not sure about this line
+  def numberOfTags: Seq[String] //I wanted to write String*, but IntelliJ said it's wrong.
+// Searching online I found Seq, however its from Collection...
 
 
 object Item:
@@ -19,7 +20,7 @@ object Item:
 /**
  * A warehouse is a place where items are stored.
  */
-trait Warehouse {
+trait Warehouse:
   /**
    * Stores an item in the warehouse.
    *
@@ -58,7 +59,6 @@ trait Warehouse {
    */
   def contains(itemCode: Int): Boolean
 
-}
 
 object Warehouse:
 
