@@ -6,13 +6,14 @@ trait Item:
   def code: Int
   def name: String
   def tags: List[String]
-  
+  def numberOfTags: String* //I'm not sure about this line
 
 
 object Item:
-  def apply(code: Int, name: String, tags: List[String] = List.empty): Item = ItemImpl(code, name, tags)
+  def apply(code: Int, name: String, tags: List[String] = List.empty, numberOfTags: String *): Item = ItemImpl(code, name, tags, numberOfTags: _*)
 
-  private case class ItemImpl(override val code: Int, override val name: String, override val tags: List[String] = List.empty) extends Item
+  private case class ItemImpl(override val code: Int, override val name: String, override val tags: List[String] = List.empty,
+                              override val numberOfTags: String*) extends Item
 
 
 /**
