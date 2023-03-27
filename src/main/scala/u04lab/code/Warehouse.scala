@@ -1,13 +1,19 @@
 package u04lab.code
+
 import List.*
-trait Item {
+import u04lab.code
+trait Item:
   def code: Int
   def name: String
   def tags: List[String]
-}
+  
+
 
 object Item:
-  def apply(code: Int, name: String, tags: List[String] = List.empty): Item = ???
+  def apply(code: Int, name: String, tags: List[String] = List.empty): Item = ItemImpl(code, name, tags)
+
+  private case class ItemImpl(override val code: Int, override val name: String, override val tags: List[String] = List.empty) extends Item
+
 
 /**
  * A warehouse is a place where items are stored.
@@ -15,37 +21,55 @@ object Item:
 trait Warehouse {
   /**
    * Stores an item in the warehouse.
+   *
    * @param item the item to store
    */
   def store(item: Item): Unit
+
   /**
    * Searches for items with the given tag.
+   *
    * @param tag the tag to search for
    * @return the list of items with the given tag
    */
   def searchItems(tag: String): List[Item]
+
   /**
    * Retrieves an item from the warehouse.
+   *
    * @param code the code of the item to retrieve
    * @return the item with the given code, if present
    */
   def retrieve(code: Int): Option[Item]
+
   /**
    * Removes an item from the warehouse.
+   *
    * @param item the item to remove
    */
   def remove(item: Item): Unit
+
   /**
    * Checks if the warehouse contains an item with the given code.
+   *
    * @param itemCode the code of the item to check
    * @return true if the warehouse contains an item with the given code, false otherwise
    */
   def contains(itemCode: Int): Boolean
+
 }
 
-object Warehouse {
-  def apply(): Warehouse = ???
-}
+object Warehouse:
+
+  def apply(): Warehouse = WarehouseImpl()
+  private class WarehouseImpl() extends Warehouse:
+    private var itemList: List[Item] = List.empty
+    override def store(item: Item): Unit = List.append(itemList, List.cons(item, List.empty))
+    override def searchItems(tag: String): List[Item] = List.filter(itemList)(item => List.contains(item.tags, tag))
+    override def retrieve(code: Int): Option[Item] = List.find(itemList)(item => item.code == code)
+    override def remove(item: Item): Unit = List.filter(itemList)(i => i.code != item.code)
+    override def contains(itemCode: Int): Boolean = List.contains(List.map(itemList)(i => i.code), itemCode)
+
 
 @main def mainWarehouse(): Unit =
   val warehouse = Warehouse()
@@ -53,6 +77,7 @@ object Warehouse {
   val dellXps = Item(33, "Dell XPS 15", cons("notebook", empty))
   val dellInspiron = Item(34, "Dell Inspiron 13", cons("notebook", empty))
   val xiaomiMoped = Item(35, "Xiaomi S1", cons("moped", cons("mobility", empty)))
+
 
   warehouse.contains(dellXps.code) // false
   warehouse.store(dellXps) // side effect, add dell xps to the warehouse
