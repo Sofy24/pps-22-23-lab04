@@ -10,9 +10,9 @@ trait Item:
 
 object Item:
   private def numberOfTags(t: String*) =
-    var listTags: List[String] = Nil()
-    t.foreach(x => listTags = append(listTags, Cons(x, Nil())))
-    listTags
+    var tagsList: List[String] = Nil()
+    t.foreach(x => tagsList = append(tagsList, Cons(x, Nil())))
+    tagsList
 
   def apply(code: Int, name: String, tags: String*): Item = ItemImpl(code, name, numberOfTags(tags: _*))
 
