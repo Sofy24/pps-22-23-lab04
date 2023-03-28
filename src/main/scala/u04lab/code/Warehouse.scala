@@ -6,15 +6,17 @@ trait Item:
   def code: Int
   def name: String
   def tags: List[String]
-  def numberOfTags: Seq[String] //I wanted to write String*, but IntelliJ said it's wrong.
-// Searching online I found Seq, however its from Collection...
 
 
 object Item:
-  def apply(code: Int, name: String, tags: List[String] = List.empty, numberOfTags: String *): Item = ItemImpl(code, name, tags, numberOfTags: _*)
+  private def numberOfTags(t: String*) =
+    var listTags: List[String] = Nil()
+    t.foreach(x => listTags = append(listTags, Cons(x, Nil())))
+    listTags
 
-  private case class ItemImpl(override val code: Int, override val name: String, override val tags: List[String] = List.empty,
-                              override val numberOfTags: String*) extends Item
+  def apply(code: Int, name: String, tags: String*): Item = ItemImpl(code, name, numberOfTags(tags: _*))
+
+  private case class ItemImpl(override val code: Int, override val name: String, override val tags: List[String]) extends Item
 
 
 /**
@@ -75,9 +77,9 @@ object Warehouse:
 @main def mainWarehouse(): Unit =
   val warehouse = Warehouse()
 
-  val dellXps = Item(33, "Dell XPS 15", cons("notebook", empty))
-  val dellInspiron = Item(34, "Dell Inspiron 13", cons("notebook", empty))
-  val xiaomiMoped = Item(35, "Xiaomi S1", cons("moped", cons("mobility", empty)))
+  val dellXps = Item(33, "Dell XPS 15", "notebook", "mobility")
+  val dellInspiron = Item(34, "Dell Inspiron 13", "notebook")
+  val xiaomiMoped = Item(35, "Xiaomi S1", "moped", "mobility")
 
 
   warehouse.contains(dellXps.code) // false
